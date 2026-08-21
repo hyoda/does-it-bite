@@ -1,0 +1,9 @@
+# 이 저장소의 검사기를 이 저장소의 변이 시험으로 시험한다.
+# 검사기를 내면서 그 검사기가 무는지 시험하지 않으면, 이 저장소는 자기 주장을 어긴다.
+#
+# 라벨	변이시킬 파일	python3 표현식 (s = 파일 내용)	검사 명령
+고아 탐지	examples/site/index.html	s.replace('<a href="/a/">A</a>', 'A')	checks/orphan_pages.py examples/site --ignore 'orphan/*'
+생성기 갈림	examples/gen-b.json	s.replace('"https://ex.kr/#me"', '"https://other.kr/#me"')	checks/generator_parity.py examples/gen-a.json examples/gen-b.json --path 'person.id'
+문서 수치 표류	examples/DOC.md	s.replace('**20곳**<!--N:clients-->', '**99곳**<!--N:clients-->')	checks/doc_drift.py examples/DOC.md --values examples/counts.json
+금지 이름 누출	examples/site/b/index.html	s.replace('<body>', '<body>acme-internal ')	checks/leaked_names.py examples/site --forbidden examples/forbidden.txt
+자기 문서 표류	README.md	s.replace("검사기 5종<!--N:checks-->", "검사기 9종<!--N:checks-->")	checks/doc_drift.py README.md --values-cmd scripts/count.sh
