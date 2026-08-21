@@ -1,0 +1,20 @@
+# GitHub Actions 설정. **이 파일을 .github/workflows/ 로 옮기면 켜진다.**
+#
+#     mkdir -p .github/workflows
+#     cp examples/github-actions.yml .github/workflows/ci.yml
+#
+# 두 단계로 나뉜 것이 핵심이다 — 첫 단계만 있으면 검사가 죽어도 초록불이 뜬다(FAILURES.md F2).
+
+name: checks
+on: [push, pull_request]
+jobs:
+  bite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 검사가 도는가
+        run: |
+          checks/orphan_pages.py examples/site --ignore orphan
+          checks/doc_drift.py README.md --values-cmd scripts/count.sh
+      - name: 그 검사가 살아 있는가
+        run: mutation/mutate.sh mutation/cases.tsv

@@ -150,15 +150,23 @@ checks/idempotent_build.sh 'make site' dist/
 
 1. 필요한 검사기를 `checks/` 로 복사한다 (파일 하나씩 독립이다)
 2. `cases.tsv` 에 각각의 변이 케이스를 쓴다 — **검사기 하나에 케이스 하나**
-3. CI 에 두 줄을 넣는다:
+3. CI 에 두 단계를 넣는다 — [`examples/github-actions.yml`](examples/github-actions.yml) 을 복사하면 된다:
+
+```bash
+mkdir -p .github/workflows && cp examples/github-actions.yml .github/workflows/ci.yml
+```
 
 ```yaml
-- run: checks/orphan_pages.py dist/       # 검사가 도는가
+- run: checks/orphan_pages.py dist/            # 검사가 도는가
 - run: mutation/mutate.sh mutation/cases.tsv   # 그 검사가 살아 있는가
 ```
 
-둘째 줄이 핵심이다. 첫 줄만 있으면 F2 로 돌아간다 —
+둘째 단계가 핵심이다. 첫 단계만 있으면 F2 로 돌아간다 —
 **검사가 죽어도 초록불이 뜬다.**
+
+> **이 저장소 자신의 CI 는 아직 안 돈다.** 워크플로 파일을 올리려면 별도 권한이 필요한데
+> 아직 붙이지 않았다. 그래서 위 검사들은 **손으로 돌린 결과**다(신선한 클론에서 5/5 물림 확인).
+> 자동으로 돌지 않는 것을 도는 것처럼 두면, 이 저장소가 자기 주장을 어긴다.
 
 ---
 
